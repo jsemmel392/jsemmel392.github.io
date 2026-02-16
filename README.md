@@ -1,16 +1,14 @@
-## Hi there 👋
+# Hi there, I'm Joseph! 👋
 
-<!--
-**jsemmel392/jsemmel392** is a ✨ _special_ ✨ repository because its `README.md` (this file) appears on your GitHub profile.
+I'm a developer working on Rust and automation projects.
 
-Here are some ideas to get you started:
+## 🛠 My Current Projects
+* **[HaloClock](https://github.com/jsemmel392/HaloClock)** - A Rust-based clock project with automated GitHub Actions.
 
-- 🔭 I’m currently working on ...
-- 🌱 I’m currently learning ...
-- 👯 I’m looking to collaborate on ...
-- 🤔 I’m looking for help with ...
-- 💬 Ask me about ...
-- 📫 How to reach me: ...
-- 😄 Pronouns: ...
-- ⚡ Fun fact: ...
--->
+* **[Joe's rust utils ](https://jsemmel392.github.io/joes_rust_utils/)** My favorite rust utils
+* **Other Project Name** - Brief description of what it does.
+
+## 🚀 About Me
+- 🔭 I’m currently working on mastering GitHub CI/CD pipelines.
+- 🌱 I’m learning Rust and systems programming.
+- ⚡ Fun fact: I prefer `sync.cmd` over manual git commands!
