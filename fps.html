@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Finger Paint Studio</title>
+    <style>
+        body { margin: 0; overflow: hidden; background: #121212; font-family: 'Segoe UI', sans-serif; display: flex; }
+        
+        .dashboard { 
+            width: 75px; height: 100vh; background: #1a1a1a; 
+            display: flex; flex-direction: column; align-items: center; 
+            padding: 15px 0; gap: 10px; border-right: 1px solid #333; z-index: 10;
+        }
+
+        canvas { flex-grow: 1; background: white; touch-action: none; cursor: crosshair; }
+
+        .tool-btn { 
+            width: 48px; height: 48px; border-radius: 8px; border: none; 
+            background: #2a2a2a; color: #ccc; cursor: pointer; font-size: 20px;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .tool-btn.active { background: #0078d7; color: white; box-shadow: 0 0 12px rgba(0,120,215,0.3); }
+
+        .color-grid { 
+            display: grid; grid-template-columns: 1fr 1fr; gap: 8px; 
+            padding: 10px 0; border-top: 1px solid #333; 
+        }
+        .swatch { width: 26px; height: 26px; border-radius: 4px; cursor: pointer; border: 1px solid rgba(255,255,255,0.1); }
+        .swatch.active { border: 2px solid white; transform: scale(1.1); }
+        
+        .picker-wrapper { grid-column: span 2; position: relative; width: 100%; height: 30px; margin-top: 5px; }
+        #customColor { 
+            width: 100%; height: 100%; border: none; padding: 0; border-radius: 4px;
+            background: linear-gradient(45deg, red, yellow, green, blue, brown, black); cursor: pointer;
+        }
+
+        .size-label { color: #555; font-size: 9px; font-weight: bold; letter-spacing: 1px; }
+        input[type="range"] { writing-mode: bt-lr; appearance: slider-vertical; width: 6px; height: 100px; }
+        
+        .action-area {
+            margin-top: auto; display: flex; flex-direction: column; gap: 12px;
+            width: 100%; align-items: center; padding-bottom: 40px;
+        }
+        
+        .action-link { 
+            background: none; border: none; color: #777; font-size: 9px; 
+            font-weight: 600; cursor: pointer; transition: color 0.2s; text-transform: uppercase;
+        }
+        .action-link:hover { color: #fff; }
+        .fs-btn { border: 1px solid #444; padding: 5px; border-radius: 4px; width: 60px; color: #aaa; }
+        
+        #fileInput { display: none; }
+    </style>
+</head>
+<body>
+
+<div class="dashboard">
+    <button id="penBtn" class="tool-btn active" onclick="setMode('draw')">🖌️</button>
+    <button id="eraseBtn" class="tool-btn" onclick="setMode('erase')">🧽</button>
+    <button class="tool-btn" onclick="undo()">↩️</button>
+    
+    <div class="size-label">SIZE</div>
+    <input type="range" id="sizeSlider" min="1" max="200" value="10">
+
+    <div class="color-grid">
+        <div class="swatch active" style="background: #000000;" onclick="setColor('#000000', this)"></div>
+        <div class="swatch" style="background: #ffffff;" onclick="setColor('#ffffff', this)"></div>
+        <div class="swatch" style="background: #8B4513;" onclick="setColor('#8B4513', this)"></div>
+        <div class="swatch" style="background: #e53935;" onclick="setColor('#e53935', this)"></div>
+        <div class="swatch" style="background: #43a047;" onclick="setColor('#43a047', this)"></div>
+        <div class="swatch" style="background: #1e88e5;" onclick="setColor('#1e88e5', this)"></div>
+        <div class="picker-wrapper">
+            <input type="color" id="customColor" oninput="setColor(this.value, null)" title="Pick any color">
+        </div>
+    </div>
+
+    <div class="action-area">
+        <button onclick="toggleFullScreen()" class="action-link fs-btn">FS</button>
+        <button onclick="document.getElementById('fileInput').click()" class="action-link">LOAD</button>
+        <button onclick="saveWithFileName()" class="action-link" style="color: #0078d7;">SAVE AS</button>
+        <button onclick="clearCanvas()" class="action-link" style="color: #944;">CLEAR</button>
+    </div>
+</div>
+
+<input type="file" id="fileInput" accept="image/*">
+<canvas id="paintCanvas"></canvas>
+
+<script>
+    const canvas = document.getElementById('paintCanvas');
+    const ctx = canvas.getContext('2d');
+    const sizeSlider = document.getElementById('sizeSlider');
+    const fileInput = document.getElementById('fileInput');
+    
+    let painting = false;
+    let mode = 'draw';
+    let currentColor = '#000000';
+    let history = []; 
+
+    function resize() {
+        const temp = canvas.toDataURL();
+        canvas.width = window.innerWidth - 75;
+        canvas.height = window.innerHeight;
+        const img = new Image();
+        img.src = temp;
+        img.onload = () => ctx.drawImage(img, 0, 0);
+    }
+    window.onresize = resize;
+    resize();
+
+    function saveState() {
+        if (history.length > 30) history.shift();
+        history.push(canvas.toDataURL());
+    }
+
+    function undo() {
+        if (history.length > 1) {
+            history.pop();
+            const img = new Image();
+            img.src = history[history.length - 1];
+            img.onload = () => {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                ctx.drawImage(img, 0, 0);
+            };
+        }
+    }
+
+    fileInput.onchange = (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = (event) => {
+            const img = new Image();
+            img.onload = () => {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                saveState();
+            };
+            img.src = event.target.result;
+        };
+        reader.readAsDataURL(file);
+    };
+
+    function getCoords(e) {
+        const rect = canvas.getBoundingClientRect();
+        const x = (e.clientX || (e.touches && e.touches[0].clientX)) - rect.left;
+        const y = (e.clientY || (e.touches && e.touches[0].clientY)) - rect.top;
+        return { x, y };
+    }
+
+    function draw(e) {
+        if (!painting) return;
+        const { x, y } = getCoords(e);
+        ctx.lineWidth = sizeSlider.value;
+        ctx.lineCap = 'round';
+        ctx.lineJoin = 'round';
+        ctx.globalCompositeOperation = (mode === 'erase') ? 'destination-out' : 'source-over';
+        ctx.strokeStyle = currentColor;
+        ctx.lineTo(x, y);
+        ctx.stroke();
+        ctx.beginPath();
+        ctx.moveTo(x, y);
+        if (e.cancelable) e.preventDefault();
+    }
+
+    canvas.addEventListener('mousedown', (e) => { painting = true; draw(e); });
+    canvas.addEventListener('touchstart', (e) => { painting = true; draw(e); }, {passive: false});
+    window.addEventListener('mouseup', () => { if(painting) saveState(); painting = false; ctx.beginPath(); });
+    window.addEventListener('touchend', () => { if(painting) saveState(); painting = false; ctx.beginPath(); });
+    canvas.addEventListener('mousemove', draw);
+    canvas.addEventListener('touchmove', draw, {passive: false});
+
+    function setMode(m) { 
+        mode = m; 
+        document.getElementById('penBtn').classList.toggle('active', m === 'draw');
+        document.getElementById('eraseBtn').classList.toggle('active', m === 'erase');
+    }
+
+    function setColor(color, element) {
+        currentColor = color;
+        setMode('draw');
+        document.querySelectorAll('.swatch').forEach(s => s.classList.remove('active'));
+        if(element) element.classList.add('active');
+    }
+
+    // THE NEW "SAVE AS" LOGIC
+    async function saveWithFileName() {
+        const tempCanvas = document.createElement('canvas');
+        tempCanvas.width = canvas.width;
+        tempCanvas.height = canvas.height;
+        const tempCtx = tempCanvas.getContext('2d');
+        tempCtx.fillStyle = "white";
+        tempCtx.fillRect(0, 0, tempCanvas.width, tempCanvas.height);
+        tempCtx.drawImage(canvas, 0, 0);
+
+        // Check if browser supports File System Access (Standard on Edge/Chrome for Windows)
+        if ('showSaveFilePicker' in window) {
+            try {
+                const handle = await window.showSaveFilePicker({
+                    suggestedName: 'my-art.png',
+                    types: [{
+                        description: 'PNG Image',
+                        accept: {'image/png': ['.png']},
+                    }],
+                });
+                const writable = await handle.createWritable();
+                const blob = await new Promise(res => tempCanvas.toBlob(res));
+                await writable.write(blob);
+                await writable.close();
+            } catch (err) {
+                console.error("Save cancelled or failed", err);
+            }
+        } else {
+            // Fallback for older browsers
+            const fileName = prompt("Enter file name:", "my-art.png");
+            if (fileName) {
+                const link = document.createElement('a');
+                link.download = fileName.endsWith('.png') ? fileName : fileName + '.png';
+                link.href = tempCanvas.toDataURL("image/png");
+                link.click();
+            }
+        }
+    }
+
+    function toggleFullScreen() {
+        if (!document.fullscreenElement) {
+            document.documentElement.requestFullscreen().then(() => {
+                setTimeout(resize, 200);
+            });
+        } else {
+            document.exitFullscreen().then(() => {
+                setTimeout(resize, 200);
+            });
+        }
+    }
+
+    function clearCanvas() { 
+        if(confirm("Start over?")) {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            saveState();
+        }
+    }
+
+    saveState();
+</script>
+</body>
+</html>
