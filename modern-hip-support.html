@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Modern HIP – Support</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      background: #0f0f0f;
+      color: #e0e0e0;
+      min-height: 100vh;
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      padding: 60px 20px;
+    }
+
+    .container {
+      max-width: 720px;
+      width: 100%;
+    }
+
+    header {
+      margin-bottom: 48px;
+      border-bottom: 1px solid #2a2a2a;
+      padding-bottom: 24px;
+    }
+
+    header h1 {
+      font-size: 2rem;
+      font-weight: 600;
+      color: #ffffff;
+      letter-spacing: -0.5px;
+    }
+
+    header p {
+      margin-top: 8px;
+      font-size: 0.95rem;
+      color: #888;
+      line-height: 1.6;
+    }
+
+    section {
+      margin-bottom: 48px;
+    }
+
+    section h2 {
+      font-size: 1rem;
+      font-weight: 600;
+      color: #a0c4ff;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 20px;
+    }
+
+    .faq-item {
+      margin-bottom: 28px;
+    }
+
+    .faq-item h3 {
+      font-size: 1rem;
+      font-weight: 600;
+      color: #ffffff;
+      margin-bottom: 8px;
+    }
+
+    .faq-item p {
+      font-size: 0.975rem;
+      line-height: 1.75;
+      color: #c0c0c0;
+    }
+
+    .contact-box {
+      background: #1a1a1a;
+      border: 1px solid #2a2a2a;
+      border-radius: 8px;
+      padding: 28px 32px;
+    }
+
+    .contact-box p {
+      font-size: 0.975rem;
+      line-height: 1.75;
+      color: #c0c0c0;
+      margin-bottom: 16px;
+    }
+
+    .contact-box a.email-btn {
+      display: inline-block;
+      background: #a0c4ff;
+      color: #0f0f0f;
+      font-weight: 600;
+      font-size: 0.9rem;
+      padding: 10px 24px;
+      border-radius: 6px;
+      text-decoration: none;
+      transition: background 0.2s;
+    }
+
+    .contact-box a.email-btn:hover {
+      background: #c0d8ff;
+    }
+
+    footer {
+      margin-top: 60px;
+      padding-top: 24px;
+      border-top: 1px solid #2a2a2a;
+      font-size: 0.85rem;
+      color: #555;
+    }
+
+    a {
+      color: #a0c4ff;
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+
+    <header>
+      <h1>Modern HIP — Support</h1>
+      <p>Modern HIP is a steganography utility for Windows that lets you hide any file inside a PNG image using AES-256 encryption. If you need help or have a question, you're in the right place.</p>
+    </header>
+
+    <section>
+      <h2>Frequently Asked Questions</h2>
+
+      <div class="faq-item">
+        <h3>How do I hide a file?</h3>
+        <p>Switch the app to <strong>Hide Mode (Red)</strong>. Click the browse buttons to select your carrier PNG and the file you want to hide. Enter a strong Security Key for AES-256-GCM encryption, then click "Hide my file." A new image will be generated containing your encrypted data.</p>
+      </div>
+
+      <div class="faq-item">
+        <h3>How do I retrieve a hidden file?</h3>
+        <p>Switch the app to <strong>Retrieve Mode (Green)</strong>. Select the PNG image that contains your hidden data and enter the original Security Key. Click "Retrieve my file" to decrypt and save your hidden file back to your machine.</p>
+      </div>
+
+      <div class="faq-item">
+        <h3>Why are only PNG files supported?</h3>
+        <p><strong>PNG is a requirement</strong> for secure steganography. Unlike JPEGs, which use "lossy" compression that destroys hidden data bits, PNG is a lossless format. This ensures that your encrypted payload remains bit-perfect and recoverable every time.</p>
+      </div>
+
+      <div class="faq-item">
+        <h3>How large a file can I hide?</h3>
+        <p>The maximum hidden file size depends on the dimensions of your carrier PNG. As a general guide, a 1920x1080 PNG can hold approximately 750KB of hidden data. Larger images can accommodate larger payloads.</p>
+      </div>
+
+      <div class="faq-item">
+        <h3>Is my data safe?</h3>
+        <p>Modern HIP encrypts your hidden file using AES-256 before embedding it in the image. The app has no internet connectivity and does not transmit any data. All operations are performed entirely on your local machine.</p>
+      </div>
+
+      <div class="faq-item">
+        <h3>Does Modern HIP work on Windows 10?</h3>
+        <p>Yes. Modern HIP is compatible with Windows 10 and Windows 11.</p>
+      </div>
+    </section>
+
+    <section>
+      <h2>Contact Support</h2>
+      <div class="contact-box">
+        <p>Can't find the answer you're looking for? Send an email and we'll get back to you as soon as possible.</p>
+        <a class="email-btn" href="mailto:joseph@semmel.us">joseph@semmel.us</a>
+      </div>
+    </section>
+
+    <footer>
+      &copy; 2025 Modern HIP &mdash; <a href="https://semmel.us">semmel.us</a> &mdash; <a href="/privacy.html">Privacy Policy</a>
+    </footer>
+
+  </div>
+</body>
+</html>
