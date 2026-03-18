@@ -119,6 +119,11 @@
     a:hover {
       text-decoration: underline;
     }
+
+    .warning {
+      color: #ffd60a;
+      font-weight: 600;
+    }
   </style>
 </head>
 <body>
@@ -126,7 +131,7 @@
 
     <header>
       <h1>Modern HIP — Support</h1>
-      <p>Modern HIP is a steganography utility for Windows that lets you hide any file inside a PNG image using AES-256 encryption. If you need help or have a question, you're in the right place.</p>
+      <p>Modern HIP is a steganography utility for macOS &amp; Windows that lets you hide any file inside a PNG image using AES-256 encryption. If you need help or have a question, you're in the right place.</p>
     </header>
 
     <section>
@@ -158,9 +163,40 @@
       </div>
 
       <div class="faq-item">
-        <h3>Does Modern HIP work on Windows 10?</h3>
+        <h3>How strong should my Security Key (password) be?</h3>
+        <p>Your Security Key — the password you enter — is the only thing protecting your hidden data. The encryption is only as strong as the key you choose. We recommend using a long, random passphrase of at least 16 characters, mixing uppercase, lowercase, numbers, and symbols. Avoid dictionary words or anything personally identifiable. A password manager can generate and store a strong key for you. <span class="warning"> There is no recovery option — if you forget your Security Key, your hidden data cannot be retrieved.</span></p>
+      </div>
+
+      <div class="faq-item">
+        <h3>What should I name my output image?</h3>
+        <p>Choose a natural, unremarkable filename — something like <em>vacation_photo.png</em> or <em>family_dinner.png</em>. Avoid names that hint at hidden content such as "encrypted," "secured," "hidden," or "payload." The strength of steganography lies in the image appearing completely ordinary. A suspicious filename draws attention and undermines the entire concept.</p>
+      </div>
+
+      <div class="faq-item">
+        <h3>Is Modern HIP cross-platform compatible?</h3>
+        <p>Yes. Files hidden and encrypted on Windows can be retrieved and decrypted on macOS, and vice versa. As long as you use the same Security Key, Modern HIP works seamlessly across both platforms.</p>
+      </div>
+
+      <div class="faq-item">
+        <h3>Can I share the image through social media or messaging apps?</h3>
+        <p>No. Most platforms — including WhatsApp, Facebook, Instagram, and iMessage — automatically recompress or convert uploaded images. This will permanently destroy the hidden data. Always share your image through methods that preserve the file exactly, such as email attachments, cloud storage links, or physical transfer via USB.</p>
+      </div>
+
+      <div class="faq-item">
+        <h3>Why is retrieval failing?</h3>
+        <p>The most common cause is a typo in your Security Key. Even a single character difference will result in decryption failure — this is by design. Double-check your key carefully, including capitalization, spaces, and special characters. <span class="warning"> There is no recovery option — Modern HIP has no backdoor, no password reset, and no way to retrieve your data if the Security Key is lost or forgotten.</span> Keep your key stored somewhere safe.</p>
+      </div>
+
+      <div class="faq-item">
+        <h3>Does the Windows version work on Windows 10 and 11?</h3>
         <p>Yes. Modern HIP is compatible with Windows 10 and Windows 11.</p>
       </div>
+
+      <div class="faq-item">
+        <h3>Does the macOS version run on both Intel and Apple Silicon?</h3>
+        <p>Yes. Modern HIP is compatible with macOS Monterey (12) and later, on both Intel and Apple Silicon Macs.</p>
+      </div>
+
     </section>
 
     <section>
@@ -172,7 +208,7 @@
     </section>
 
     <footer>
-      2026 Modern HIP &mdash; <a href="https://semmel.us">semmel.us</a> &mdash; <a href="/privacy.html">Privacy Policy</a>
+      &copy; 2026 Modern HIP &mdash; <a href="https://semmel.us">semmel.us</a> &mdash; <a href="/privacy.html">Privacy Policy</a>
     </footer>
 
   </div>
