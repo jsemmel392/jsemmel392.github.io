@@ -71,3 +71,7 @@ h1 {
     width: 60%;        
     max-width: 350px;  
 }  
+.mirror {
+  display: inline-block;
+  transform: scaleX(-1);
+}
