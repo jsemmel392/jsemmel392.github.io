@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<!-- guess1000.html -->
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Guess the Number Game</title>
+  <style>
+    body {
+      background-color: black;
+      color: green;
+      font-family: Calibri, sans-serif;
+    }
+    .main {
+      text-align: center;
+    }
+  </style>
+</head>
+
+<body>
+  <center><h1>Guess the Number Game</h1></center>
+  <div class="main">
+    <form id="guessForm">
+      <center>
+        <button type="button" onClick="refreshPage()">Restart</button>
+        <p>
+        <label for="Guess">Pick a number between 1 and 1000: </label>
+        <input placeholder="" inputmode="decimal" id="numberField" type="number">
+        <input type="submit" value="Guess">
+      </center>
+    </form>
+    <p id="results"></p>
+  </div>
+
+  <script>
+    let numberToGuess;
+    let numberField = document.querySelector("#numberField");
+    let results = document.querySelector("#results");
+    let mySpacer = "beforeend";
+    let myCounter = 0;
+
+    // Add event listener to the form
+    let guessForm = document.querySelector("#guessForm");
+    guessForm.addEventListener("submit", function(event) {
+      event.preventDefault(); // Prevent default form submission
+      checkNumber();
+    });
+
+    function setNumberToGuess() {
+      numberToGuess = getRandomNumber(1, 1000);
+    }
+    setNumberToGuess();
+
+    function getRandomNumber(low, high) {
+      return Math.floor(Math.random() * (high - low + 1)) + low;
+    }
+
+    function refreshPage() {
+      setNumberToGuess();
+      myCounter = 0;
+      results.innerHTML = "";
+      numberField.value = "";
+    }
+
+    function checkNumber() {
+      let enteredNumber = numberField.value;
+      numberField.value = "";
+
+      if (enteredNumber === "") {
+        let message = `<p>⛔ Please enter a number!</p>`;
+        results.insertAdjacentHTML(mySpacer, message);
+        return;
+      }
+
+      enteredNumber = parseInt(enteredNumber);
+
+      if (enteredNumber < 1 || enteredNumber > 1000) {
+        let message = `<p>⛔ Number out of range! Please pick a number between 1 and 1000.</p>`;
+        results.insertAdjacentHTML(mySpacer, message);
+		//myCounter--;
+        return;
+      }
+
+      //myCounter++;
+
+      if (enteredNumber === numberToGuess) {
+        myCounter++;
+        let message = `<p>----- You Won !! -----<p>
+                       <p>🎉 Your guess of ${enteredNumber} is <b>correct</b>! 🎉</p>
+                       <p>🎉 Wow you won in ${myCounter} guesses! 🎉<p>`;
+        results.insertAdjacentHTML(mySpacer, message);
+        setNumberToGuess();
+        myCounter = 0;  // Reset counter after a win
+      } else if (enteredNumber < numberToGuess) {
+		myCounter++;
+        let message = `<p>Your guess of ${enteredNumber} is <b>too low</b>!</p>`;
+        results.insertAdjacentHTML(mySpacer, message);
+      } else {
+        myCounter++;
+		let message = `<p>Your guess of ${enteredNumber} is <b>too high</b>!</p>`;
+        results.insertAdjacentHTML(mySpacer, message);
+      }
+    }
+  </script>
+</body>
+</html>

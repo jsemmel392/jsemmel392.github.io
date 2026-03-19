@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<!-- stars.html -->
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Starfield with Directional Control and Hyperdrive</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background: black;
+            height: 100%;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        canvas {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+<canvas id="starfield"></canvas>
+<script>
+    const canvas = document.getElementById("starfield");
+    const ctx = canvas.getContext("2d");
+    const numStars = 200;
+    let normalSpeed = 5;
+    let currentSpeed = normalSpeed;
+    const maxDepth = 1500;
+    let stars = [];
+    // let starColor = "White";
+
+    // Hyperdrive settings
+    const hyperdriveSpeed = 100; // Speed during hyperdrive
+    let isHyperdriveActive = false;
+
+    // Central focal point variables
+    let focalX = 0;
+    let focalY = 0;
+    const focalSpeed = 10; // Speed of changing the focal point
+
+    // Set canvas size to match the window size
+    function setCanvasSize() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+    }
+    
+    function getRandomColor() {
+        const letters = '0123456789ABCDEF';
+        let color = '#';
+        for (let i = 0; i < 6; i++) {
+            color += letters[Math.floor(Math.random() * 16)];
+        }
+        return color;
+    }    
+    
+    
+
+    // Star class definition
+    class Star {
+        constructor(x, y, z, size, color) {
+            this.x = x;
+            this.y = y;
+            this.z = z;
+            this.size = size;
+            this.color = color;
+        }
+
+        // Update star position
+        update() {
+            this.z -= currentSpeed;
+
+            // Reset star if it moves out of bounds or reaches zero depth
+            if (this.z <= 0 || Math.abs(this.x) > canvas.width / 2 || Math.abs(this.y) > canvas.height / 2) {
+                this.reset();
+            }
+
+            // Adjust star position relative to the focal point
+            this.x += focalX * (currentSpeed / maxDepth) * this.z;
+            this.y += focalY * (currentSpeed / maxDepth) * this.z;
+        }
+
+        // Reset star to a new random position
+        reset() {
+            this.z = maxDepth;
+            const angle = Math.random() * 2 * Math.PI;
+            const distance = Math.sqrt(Math.random()) * (canvas.width / 2);
+            this.x = Math.cos(angle) * distance;
+            this.y = Math.sin(angle) * distance;
+            this.size = (1 - distance / (canvas.width / 2)) * 0.1 + 0.5;
+            // this.color = starColor;
+            this.color = isHyperdriveActive ? getRandomColor() : "white";
+        }
+
+        // Draw star on canvas
+        draw() {
+            const x = ((this.x / this.z) * canvas.width) / 2 + canvas.width / 2;
+            const y = ((this.y / this.z) * canvas.height) / 2 + canvas.height / 2;
+            const radius = (1 - this.z / maxDepth) * this.size * 3;
+            ctx.beginPath();
+            ctx.arc(x, y, radius, 0, Math.PI * 2);
+            ctx.fillStyle = this.color;
+            ctx.fill();
+        }
+    }
+
+    // Initialize stars
+    function initStars() {
+        stars = Array.from({ length: numStars }, () => {
+            const angle = Math.random() * 2 * Math.PI;
+            const distance = Math.sqrt(Math.random()) * (canvas.width / 2);
+            return new Star(
+                Math.cos(angle) * distance,
+                Math.sin(angle) * distance,
+                Math.random() * maxDepth
+                // (1 - distance / (canvas.width / 2)) * 0.1 + 0.5, starColor
+            );
+        });
+    }
+
+    // Update and draw stars
+    function updateAndDrawStars() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        stars.forEach((star) => {
+            star.update();
+            star.draw();
+        });
+        requestAnimationFrame(updateAndDrawStars);
+    }
+
+    // Adjust canvas size on window resize
+    window.addEventListener("resize", () => {
+        setCanvasSize();
+        initStars();
+    });
+
+    // Handle keydown events
+    window.addEventListener("keydown", (event) => {
+        switch (event.code) {
+            case 'ArrowLeft':
+                focalX = 1;
+                break;
+            case 'ArrowRight':
+                focalX = -1;
+                break;
+            case 'ArrowUp':
+                focalY = 1;
+                break;
+            case 'ArrowDown':
+                focalY = -1;
+                break;
+            case 'Space':
+                activateHyperdrive();
+                break;
+        }
+    });
+
+    // Handle keyup events
+    window.addEventListener("keyup", (event) => {
+        switch (event.code) {
+            case 'ArrowLeft':
+            case 'ArrowRight':
+                focalX = 0;
+                break;
+            case 'ArrowUp':
+            case 'ArrowDown':
+                focalY = 0;
+                break;
+            case 'Space':
+                deactivateHyperdrive();
+                break;
+        }
+    });
+
+    // Activate hyperdrive
+    function activateHyperdrive() {
+        isHyperdriveActive = true;
+        currentSpeed = hyperdriveSpeed;
+		starColor = "Green";
+    }
+
+    // Deactivate hyperdrive
+    function deactivateHyperdrive() {
+        isHyperdriveActive = false;
+        currentSpeed = normalSpeed;
+		starColor = "White";
+    }
+
+    // Initial setup
+    setCanvasSize();
+    initStars();
+    updateAndDrawStars();
+</script>
+</body>
+</html>
