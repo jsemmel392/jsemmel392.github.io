@@ -1,11 +1,12 @@
 // file_name: sketch.js
-// description: External p5.js script handling the 3D WebGL rendering and rotation logic for Metatron's Cube.
+// description: External p5.js script handling a responsive, full-window 3D WebGL rendering of Metatron's Cube.
 
 let rotX = 0;
 let rotY = 0;
 
 function setup() {
-  createCanvas(600, 600, WEBGL);
+  // Create a canvas that fills the entire browser window
+  createCanvas(windowWidth, windowHeight, WEBGL);
 }
 
 function draw() {
@@ -24,7 +25,8 @@ function draw() {
   noFill();
   strokeWeight(1.0);
 
-  let radius = 180;
+  // Scale size dynamically based on screen dimensions so it fits nicely
+  let radius = min(width, height) * 0.25;
   let centers = [];
 
   centers.push(createVector(0, 0, 0));
@@ -49,7 +51,7 @@ function draw() {
   for (let pt of centers) {
     push();
     translate(pt.x, pt.y, pt.z);
-    sphere(18);
+    sphere(radius * 0.1);
     pop();
   }
   pop();
@@ -60,4 +62,9 @@ function draw() {
       line(centers[i].x, centers[i].y, centers[i].z, centers[j].x, centers[j].y, centers[j].z);
     }
   }
+}
+
+// Automatically resize the canvas if the browser window changes dimensions
+function windowResized() {
+  resizeCanvas(windowWidth, windowHeight);
 }
